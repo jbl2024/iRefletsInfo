@@ -1,0 +1,6 @@
+[submodule "Classes/ShareKit"]
+	path = Classes/ShareKit
+	url = git://github.com/ShareKit/ShareKit.git
+[submodule "ShareKit"]
+	path = ShareKit
+	url = git://github.com/ShareKit/ShareKit.git
