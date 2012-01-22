@@ -32,6 +32,7 @@
 #import <Foundation/Foundation.h>
 #import "UIViewExtention.h"
 #import "MessageModel.h"
+#import "SHKActionSheet.h"
 
 @interface FullScreenView : UIViewExtention  {
 	MessageModel* messageModel;
@@ -44,6 +45,8 @@
 	UIView* fullScreenBG;
 	UIButton* closeButton;
     UIToolbar *webControlBar;
+    UIBarButtonItem *shareButtonItem;
+    SHKActionSheet *shareActionSheet;
 }
 
 -(id)initWithModel:(MessageModel*)model;
@@ -53,4 +56,5 @@
 @property (nonatomic,assign) MessageModel* messageModel;
 @property (nonatomic,assign) UIViewExtention* viewToOverLap;
 @property (nonatomic,assign) UIView* fullScreenBG;
+@property (nonatomic,retain) SHKActionSheet* shareActionSheet;
 @end

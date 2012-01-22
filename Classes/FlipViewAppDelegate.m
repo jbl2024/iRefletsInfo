@@ -32,6 +32,10 @@
 #import "FlipViewAppDelegate.h"
 #import "WallViewController.h"
 #import "Constants.h"
+#import "DefaultSHKConfigurator.h"
+#import "SHKConfiguration.h"
+#import "MySHKConfigurator.h"
+
 @implementation FlipViewAppDelegate
 
 @synthesize window;
@@ -46,6 +50,9 @@
 #pragma mark Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
+    
+    DefaultSHKConfigurator *configurator = [[MySHKConfigurator alloc] init];
+    [SHKConfiguration sharedInstanceWithConfigurator:configurator];    
     
     // Override point for customization after app launch. 
     viewController = [[WallViewController alloc] initWithNibName:nil bundle:nil];

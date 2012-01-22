@@ -30,10 +30,13 @@
 //
 #import "FullScreenView.h"
 #import "MessageModel.h"
+#import "SHKItem.h"
+#import "SHKActionSheet.h"
+
 
 @implementation FullScreenView
 
-@synthesize messageModel,viewToOverLap,fullScreenBG;
+@synthesize messageModel,viewToOverLap,fullScreenBG, shareActionSheet;
 
 -(id)initWithModel:(MessageModel*)model {
 	if (self = [super init]) {
@@ -90,11 +93,20 @@
         UIBarButtonItem *nextButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonNext];
         [buttonNext addTarget:self action:@selector(actionNext:) forControlEvents:UIControlEventTouchUpInside];    
         
-        NSArray *items = [NSArray arrayWithObjects: prevButtonItem, nextButtonItem, nil];
+        shareButtonItem = [[UIBarButtonItem alloc]
+                                  initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                                  target:self
+                                  action:@selector(actionShare:)];        
+        
+        UIBarButtonItem *flexItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil];
+        
+        NSArray *items = [NSArray arrayWithObjects: prevButtonItem, nextButtonItem, flexItem, shareButtonItem, nil];
 
+                                     
         [webControlBar setItems:items animated:NO];
         [buttonPrev release];
         [imagePrev release];
+        [flexItem release];
             
         
         [contentView addSubview:webControlBar];
@@ -179,6 +191,23 @@
     [webView goForward];
 }
 
+- (IBAction)actionShare:(id)sender
+{
+    if (self.shareActionSheet) {
+        if (self.shareActionSheet.visible) {  
+            [self.shareActionSheet dismissWithClickedButtonIndex:-1 animated:YES];  
+            self.shareActionSheet = nil;
+        }
+    }
+    
+    // Create the item to share (in this example, a url)
+    NSURL *url = [NSURL URLWithString:self.messageModel.link];
+    SHKItem *item = [SHKItem URL:url title:self.messageModel.summary];
+    
+    // Get the ShareKit action sheet
+    self.shareActionSheet = [SHKActionSheet actionSheetForItem:item];
+    [shareActionSheet showFromBarButtonItem:shareButtonItem animated:YES];
+}
 
 -(void)showFields {
 	[self reAdjustLayout]; // i just need this dont know why ... but will look at this later and fix it 
@@ -204,6 +233,7 @@
 
 
 -(void) dealloc {
+    [shareActionSheet release];
     [webView release];
     webView=nil;
 	[closeButton release];
@@ -215,6 +245,8 @@
 	
     [contentView release];
 	contentView=nil;
+    
+    [shareButtonItem release];
         
 	[super dealloc];
 }
